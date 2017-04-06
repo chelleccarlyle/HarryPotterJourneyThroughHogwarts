@@ -1,0 +1,119 @@
+body {
+  font-family: 'Average', serif;
+  text-align: center;
+  background-color: #f4f4f4;
+  color: #373737;
+}
+
+td {
+  text-align: center;
+  padding: 35px;
+  background-size: contain;
+}
+
+table {
+  margin: 10px 0;
+  border: 1px solid black;
+  left: 10%;
+  width: 1%;
+}
+
+.progress {
+  width: 500px;
+}
+
+.container-fluid {
+    margin: 0 auto;
+    width: 70%;
+}
+
+.form-group, .message, #end-game, #quit-game {
+  margin-top: 15%;
+}
+
+#challenge, #spell, #message-own-page, #try-again {
+  margin-top: 10%;
+}
+
+#challenge-description {
+  margin-bottom: 20px;
+}
+
+label, p {
+  display: block;
+  font-size: 24px;
+}
+
+#input, #spellInput {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid black;
+  text-align: center;
+  font-size: 36px;
+  width: 70%;
+  background-color: #f4f4f4;
+  margin-bottom: 50px;
+}
+
+
+
+.formElem {
+  margin-bottom: 30px;
+}
+
+.messageElem {
+  margin-bottom: 20px;
+}
+
+.btn {
+  margin: 0 auto;
+  display: block;
+  padding: 10px;
+  font-size: 20px;
+  background-color: #a9a9a9;
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  background: #008f95;
+}
+.progress-bar-danger {
+  background: #0e0b16;
+}
+
+.col-sm-1 button {
+  height: 50px;
+  width: 50px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.prog-label {
+  margin-right: 30px;
+  text-align: right;
+}
+
+.currentMessage {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+#left-half {
+  width:55%;
+  margin-right:2%;
+  float: left;
+}
+
+#right-half {
+  width:42%;
+  float: left;
+}
+
+.clearfix{
+    clear: both;
+}
+
+#arrows {
+  margin: 0 auto;
+}
+

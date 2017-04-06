@@ -1,0 +1,227 @@
+<!-- Used Google Chrome -->
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Harry Potter - A Journey Through Hogwarts</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="icon" href="deathly-hallows.jpg">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Average" rel="stylesheet">
+  <link rel="stylesheet" href="game.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="main-updated.js"></script>
+</head>
+<body>
+
+  <audio autoplay loop>
+  <source src="hp-track.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+  </audio>  
+
+  <div class="container-fluid">
+
+    <div class="page-header">
+      <h1 id="title">Harry Potter - A Journey Through Hogwarts</h1>
+      <h2 id="creator"><small>By Chelle Cruz</small></h2>
+    </div> 
+
+      <div class="form-group">
+      <label id="prompt" class="formElem" for="input">What is your name, witch or wizard?</label>
+      <input type="text" id="input" class="formElem" name="input">
+      <input type="button" id="formButton" class="btn formElem" value="Submit">
+      </div>
+
+      <div id="spell">
+        <label id="spell-instruction"></label>
+        <label id="spells"></label>
+        <input type="text" id="spellInput" name="spellInput">
+        <input type="button" id="conjure-spell" class="btn" value="Conjure Spell">
+      </div>
+
+      <div class="message">
+        <p id="message-1" class="messageElem"></p>
+        <p id="message-2" class="messageElem"></p>
+        <input type="button" id="messageButton" class="btn messageElem" value="Start Game">
+      </div>
+
+      <div id="message-own-page">
+        <p id="mop-1"></p>
+        <p id="mop-2"></p>
+        <p>(Click to Continue)</p>
+      </div>
+
+      <div id="challenge">
+        <p id="challenge-description"></p>
+        <p>(Lose 10 health points if you decline)</p>
+        <input type="button" id="decline-challenge" class="btn" value="Decline">
+        <input type="button" id="accept-challenge" class="btn" value="Accept">
+      </div>
+
+      <div id="try-again">
+        <p>Do you want to try the challange again?</p>
+        <input type="button" id="no" class="btn" value="No">
+        <input type="button" id="yes" class="btn" value="Yes">
+      </div>
+
+      <div id="end-game">
+        <p id="end-game-status"></p>
+        <p>Do you want to play again?</p>
+         <input type="button" id="quit-game-button" class="btn" value="Quit">
+         <input type="button" id="new-game-button" class="btn" value="New Game">
+      </div>
+
+      <div id="quit-game">
+        <p>Thanks for playing!</p>
+        <input type="button" id="new-button" class="btn" value="New Game">
+      </div>
+
+      <!-- GAME -->
+      <div id="game">
+
+      <div class="row">
+
+      <div id="left-half">    
+      <table id="grid"><tbody>
+        <tr id="row-0">
+          <td id="00"></td>
+          <td id="01"></td>
+          <td id="02"></td>
+          <td id="03"></td>
+          <td id="04"></td>
+          <td id="05"></td>
+          <td id="06"></td>
+          <td id="07"></td>
+        </tr>
+        <tr id="row-1">
+          <td id="10"></td>
+          <td id="11"></td>
+          <td id="12"></td>
+          <td id="13"></td>
+          <td id="14"></td>
+          <td id="15"></td>
+          <td id="16"></td>
+          <td id="17"></td>
+        </tr>
+        <tr id="row-2">
+          <td id="20"></td>
+          <td id="21"></td>
+          <td id="22"></td>
+          <td id="23"></td>
+          <td id="24"></td>
+          <td id="25"></td>
+          <td id="26"></td>
+          <td id="27"></td>
+        </tr>
+        <tr id="row-3">
+          <td id="30"></td>
+          <td id="31"></td>
+          <td id="32"></td>
+          <td id="33"></td>
+          <td id="34"></td>
+          <td id="35"></td>
+          <td id="36"></td>
+          <td id="37"></td>
+        </tr>
+        <tr id="row-4">
+          <td id="40"></td>
+          <td id="41"></td>
+          <td id="42"></td>
+          <td id="43"></td>
+          <td id="44"></td>
+          <td id="45"></td>
+          <td id="46"></td>
+          <td id="47"></td>
+        </tr>
+        <tr id="row-5">
+          <td id="50"></td>
+          <td id="51"></td>
+          <td id="52"></td>
+          <td id="53"></td>
+          <td id="54"></td>
+          <td id="55"></td>
+          <td id="56"></td>
+          <td id="57"></td>
+        </tr>
+        <tr id="row-6">
+          <td id="60"></td>
+          <td id="61"></td>
+          <td id="62"></td>
+          <td id="63"></td>
+          <td id="64"></td>
+          <td id="65"></td>
+          <td id="66"></td>
+          <td id="67"></td>
+        </tr>
+        <tr id="row-7">
+          <td id="70"></td>
+          <td id="71"></td>
+          <td id="72"></td>
+          <td id="73"></td>
+          <td id="74"></td>
+          <td id="75"></td>
+          <td id="76"></td>
+          <td id="77"></td>
+        </tr>
+      </tbody></table>
+      </div>
+
+      <div id="right-half">
+
+       <div id="health-bars" class="row">  
+        <div class="row">
+          <div class="col-xs-1 prog-label">Player</div>
+          <div class="progress">
+            <div class="progress-bar" id="player" role="progressbar" aria-valuenow="300" aria-valuemin="0" aria-valuemax="300" style="width: 100%;">300</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-1 prog-label">Voldemort</div>
+          <div class="progress">
+            <div class="progress-bar progress-bar-danger" id="enemy" role="progressbar" aria-valuenow="500" aria-valuemin="0" aria-valuemax="500" style="width: 100%;">500</div>
+          </div>
+        </div>
+      </div> 
+
+      <div id="stats" class="row">
+
+        <dl class="dl-horizontal">
+          <dt>Player:</dt>
+          <dd id="player-name">Test</dd>
+          <dt>House:</dt>
+          <dd id="house">Test</dd>
+        </dl>
+
+        <dl class="dl-horizontal">
+          <dt>Prizes:</dt>
+          <dd id="prizes">None</dd>
+          <dt>Horcruxes Left:</dt>
+          <dd id="horcruxes">7</dd>
+        </dl>
+
+      </div>
+
+       <div id="arrows" class="row">
+        <div class="row">
+          <div class="col-sm-1 col-sm-offset-1"><button type="button" class="btn btn-default" id="up"><span>&#8593;</span></button></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-1"><button type="button" class="btn btn-default" id="left"><span>&#8592;</span></button></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-default" id="down"><span>&#8595;</span></button></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-default" id="right"><span>&#8594;</span></button></div>
+        </div>
+      </div>
+
+      <input type="button" id="quit-button" class="btn" value="Quit Game">
+
+      </div>
+
+      <div class="clearfix"></div>
+
+      </div>
+
+      </div>
+
+  <div class="container-fluid">
+</body>
+</html>
