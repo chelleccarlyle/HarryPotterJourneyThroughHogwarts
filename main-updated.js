@@ -20,12 +20,118 @@ var VOLDEMORT = 8;
 var gameObjects = [];
 
 var wonChallenge;
+var beatVoldemort = false;
 
 //SET UP MAPS
 //Create 8x8 matrix, which stores objects
 var map = [];
 //Map representing what the player has visited 
 var visited = [];
+
+  //Set up event handlers for arrow buttons
+  var up = function() {
+          //Checks if player is at edge of upper side of map or if it is next to wall
+          if (player.position.row == 0 || map[player.position.row - 1][player.position.col].type == WALL) {
+             displayMessage("Sorry, you cannot go that way.");
+             if (player.position.row != 0) {
+              visited[player.position.row - 1][player.position.col] = true;
+             } 
+          }
+          //Move to that direction
+          else {
+            player.position.row -= 1;
+
+            //Make new position visited 
+            visited[player.position.row][player.position.col] = true;
+
+            //Check if player intersected with a game object (challenge or prize)
+            playerIntersectsWithSquare();
+
+            checkForWinOrLose(); //End game if won or lost
+          }
+
+          //Update map
+          printMap();
+
+  };
+  var left = function() {
+
+            console.log("left arrow clicked!");
+
+          //Checks if player is at edge of left side of map or if it is next to wall
+          if (player.position.col == 0 || map[player.position.row][player.position.col - 1].type == WALL) {
+            displayMessage("Sorry, you cannot go that way.");
+            if (player.position.col != 0) {
+              visited[player.position.row][player.position.col - 1] = true;
+            }
+          }
+          //Move to that direction
+          else {
+            player.position.col -= 1;
+
+            //Make new position visited
+            visited[player.position.row][player.position.col] = true;
+
+            //Check if player intersected with a game object (challenge or prize)
+            playerIntersectsWithSquare();
+
+            checkForWinOrLose(); //End game if won or lost
+          }
+
+          //Update map
+          printMap();
+
+  };
+  var down = function() {
+          //Checks if player is at edge of lower side of map or if it is next to wall
+          if (player.position.row == 7 || map[player.position.row + 1][player.position.col].type == WALL) {
+            displayMessage("Sorry, you cannot go that way.");
+            if (player.position.row != 7) {
+              visited[player.position.row + 1][player.position.col] = true;
+            }  
+          }
+          //Move to that direction
+          else {
+            player.position.row += 1;
+
+            //Make new position visited
+            visited[player.position.row][player.position.col] = true;
+
+            //Check if player intersected with a game object (challenge or prize)
+            playerIntersectsWithSquare();
+
+            checkForWinOrLose(); //End game if won or lost
+          }
+
+          //Update map
+          printMap();
+
+  };
+  var right = function() {
+          //Checks if player is at edge of right side of map or if it is next to wall
+          if (player.position.col == 7 || map[player.position.row][player.position.col + 1].type == WALL) {
+            displayMessage("Sorry, you cannot go that way.");
+            if (player.position.col != 7) {
+              visited[player.position.row][player.position.col + 1] = true;
+            }
+          }
+          //Move to that direction
+          else {
+            player.position.col += 1;
+
+            //Make new position visited
+            visited[player.position.row][player.position.col] = true;
+
+            //Check if player intersected with a game object (challenge or prize)
+            playerIntersectsWithSquare();
+
+            checkForWinOrLose(); //End game if won or lost
+          }
+
+          //Update map
+          printMap();
+
+  }; 
 
 //8 rows
 for (var i = 0; i < 8; i++) {
@@ -188,14 +294,20 @@ function Challenge(name, messageWon, messageLost, healthLost, typeOfChallenge, s
       $("#game").fadeOut(1000);
 
       $("#challenge-description").html("Take on challange: " + name + "?");
-      $("#decline-challenge").one("click", function() {
+      $("#decline-challenge").unbind("click").click(function() {
+
+        console.log("Challenge declined");
+
+        $("#challenge").stop(true).fadeOut(1000); //Remove challenge
         //Lose 10 points on health
         player.health -= 10;
-        $("#challenge").stop(true).fadeOut(1000); //Remove challenge
-        $("#game").delay(1000).fadeIn(1000); //Return to game
         printMap(); //Update
+        $("#game").delay(1000).fadeIn(1000); //Return to game
+        checkForWinOrLose();
       });
-      $("#accept-challenge").one("click", function() {
+      $("#accept-challenge").unbind("click").click(function() {
+
+        console.log("Challenge accepted");
 
         $("#challenge").stop(true).fadeOut(1000); //Remove challenge
 
@@ -242,18 +354,16 @@ function hazardChallenge(index, name, messageWon, messageLost, healthLost, typeO
             //WON
             if (outcome) {
 
-              $("#challenge").fadeOut(1000); //Remove challenge
+              console.log("You won the challenge!");
 
               //Display result of challenge in "message own page"
               $("#mop-1").html(messageWon);
               $("#mop-2").html("Congratulations! You won the challenge.");
 
-              $("#message-own-page").one("click", function() {
+              $("#message-own-page").unbind("click").click(function() {
                 $(this).fadeOut(1000); //Remove message
                 printMap();
-                $("#game").delay(1000).fadeIn(1000, function() {
-                  //$("#try-again").hide(); //Get rid of try again page if it shows up
-                }); //Return to game
+                $("#game").delay(1000).fadeIn(1000); //Return to game
               });
 
               $("#message-own-page").delay(1000).fadeIn(1000);
@@ -265,20 +375,23 @@ function hazardChallenge(index, name, messageWon, messageLost, healthLost, typeO
             //LOST
             else {
 
-              $("#challenge").fadeOut(1000); //Remove challenge
+              console.log("You lost the challenge!");
 
               //Display result of challenge in "message own page"
               $("#mop-1").html(messageLost);
               $("#mop-2").html("You failed the challenge. You lost " + healthLost + " health points.");
 
-              $("#message-own-page").one("click", function() {
+              $("#message-own-page").unbind("click").click(function() {
                 $(this).fadeOut(1000); //Remove message
 
-                $("#no").one("click", function() {
-                    $("#try-again").fadeOut(1000); //Get rid of try again page 
+                $("#no").unbind("click").click(function() {
+
+                    console.log("Not trying again");
+
+                    $("#try-again").stop(true).fadeOut(1000); //Get rid of try again page 
                     $("#game").delay(1000).fadeIn(1000); //Return to game
                 });
-                $("#yes").one("click", function() {
+                $("#yes").unbind("click").click(function() {
                   $("#try-again").stop(true).fadeOut(1000, function() {
                     hazardChallenge(index, name, messageWon, messageLost, healthLost, typeOfChallenge, spellToWin, enemyHealthLost); //Enter hazard challenge again
                   }); //Get rid of try again page 
@@ -286,6 +399,7 @@ function hazardChallenge(index, name, messageWon, messageLost, healthLost, typeO
 
                 //Ask to try again
                 $("#try-again").delay(1000).fadeIn(1000);
+                checkForWinOrLose();
                 
               });
 
@@ -352,8 +466,10 @@ function enemyChallenge(index, name, messageWon, messageLost, healthLost, typeOf
 
             //Add listOfSpellChoices to spell page
             $("#spells").html(listOfSpellChoices);
+            //Clear input of spellInput
+            $("#spellInput").val("");
 
-            $("#conjure-spell").click(function() {
+            $("#conjure-spell").one("click", function() {
                 //No input
                 if ($("#spellInput").val().trim() == "") {
                   $("#spell-instruction").html("Please type in a spell.");
@@ -361,18 +477,20 @@ function enemyChallenge(index, name, messageWon, messageLost, healthLost, typeOf
                 else {
 
                   //Remove spell page
-                  $("#spell").fadeOut(1000);
+                  $("#spell").stop(true).fadeOut(1000);
 
                   var spell = $("#spellInput").val().toLowerCase();
 
                   //WON
                   if (spell == spellToWin.toLowerCase()) {
 
+                    console.log("You won the enemy challenge");
+
                     //Display result of challenge in "message own page"
                     $("#mop-1").html(messageWon);
                     $("#mop-2").html("Congratulations! You won the challenge. Voldemort has lost " + enemyHealthLost + " health points and has " + --enemy.numberOfHorcruxes + " horcruxes left.");
 
-                    $("#message-own-page").one("click", function() {
+                    $("#message-own-page").unbind("click").click(function() {
                       $(this).fadeOut(1000); //Remove message
                       printMap();
                       $("#game").delay(1000).fadeIn(1000, function() {
@@ -397,14 +515,14 @@ function enemyChallenge(index, name, messageWon, messageLost, healthLost, typeOf
                       $("#mop-1").html(messageLost);
                       $("#mop-2").html("You failed the challenge. You lost " + healthLost + " health points.");
 
-                      $("#message-own-page").one("click", function() {
+                      $("#message-own-page").unbind("click").click(function() {
                         $(this).fadeOut(1000); //Remove message
 
-                        $("#no").one("click", function() {
-                            $("#try-again").fadeOut(1000); //Get rid of try again page 
+                        $("#no").unbind("click").click(function() {
+                            $("#try-again").stop(true).fadeOut(1000); //Get rid of try again page 
                             $("#game").delay(1000).fadeIn(1000); //Return to game
                         });
-                        $("#yes").one("click", function(){
+                        $("#yes").unbind("click").click(function(){
                           $("#try-again").stop(true).fadeOut(1000, function() {
                             enemyChallenge(index, name, messageWon, messageLost, healthLost, typeOfChallenge, spellToWin, enemyHealthLost); //Enter enemy challenge again
                           }); //Get rid of try again page 
@@ -412,6 +530,7 @@ function enemyChallenge(index, name, messageWon, messageLost, healthLost, typeOf
 
                         //Ask to try again
                         $("#try-again").delay(1000).fadeIn(1000);
+                        checkForWinOrLose();
                         
                       });
 
@@ -453,110 +572,10 @@ function newGame() {
   //Show game on DOM
   $("#game").stop(true).fadeIn(1000);
 
-  //Set up event handlers for arrow buttons
-  $("#up").click(function() {
-          //Checks if player is at edge of upper side of map or if it is next to wall
-          if (player.position.row == 0 || map[player.position.row - 1][player.position.col].type == WALL) {
-             displayMessage("Sorry, you cannot go that way.");
-             if (player.position.row != 0) {
-              visited[player.position.row - 1][player.position.col] = true;
-             } 
-          }
-          //Move to that direction
-          else {
-            player.position.row -= 1;
-
-            //Make new position visited 
-            visited[player.position.row][player.position.col] = true;
-
-            //Check if player intersected with a game object (challenge or prize)
-            playerIntersectsWithSquare();
-
-            checkForWinOrLose(); //End game if won or lost
-          }
-
-          //Update map
-          printMap();
-
-  });
-  $("#left").click(function() {
-
-            console.log("left arrow clicked!");
-
-          //Checks if player is at edge of left side of map or if it is next to wall
-          if (player.position.col == 0 || map[player.position.row][player.position.col - 1].type == WALL) {
-            displayMessage("Sorry, you cannot go that way.");
-            if (player.position.col != 0) {
-              visited[player.position.row][player.position.col - 1] = true;
-            }
-          }
-          //Move to that direction
-          else {
-            player.position.col -= 1;
-
-            //Make new position visited
-            visited[player.position.row][player.position.col] = true;
-
-            //Check if player intersected with a game object (challenge or prize)
-            playerIntersectsWithSquare();
-
-            checkForWinOrLose(); //End game if won or lost
-          }
-
-          //Update map
-          printMap();
-
-  });
-  $("#down").click(function() {
-          //Checks if player is at edge of lower side of map or if it is next to wall
-          if (player.position.row == 7 || map[player.position.row + 1][player.position.col].type == WALL) {
-            displayMessage("Sorry, you cannot go that way.");
-            if (player.position.row != 7) {
-              visited[player.position.row + 1][player.position.col] = true;
-            }  
-          }
-          //Move to that direction
-          else {
-            player.position.row += 1;
-
-            //Make new position visited
-            visited[player.position.row][player.position.col] = true;
-
-            //Check if player intersected with a game object (challenge or prize)
-            playerIntersectsWithSquare();
-
-            checkForWinOrLose(); //End game if won or lost
-          }
-
-          //Update map
-          printMap();
-
-  });
-  $("#right").click(function() {
-          //Checks if player is at edge of right side of map or if it is next to wall
-          if (player.position.col == 7 || map[player.position.row][player.position.col + 1].type == WALL) {
-            displayMessage("Sorry, you cannot go that way.");
-            if (player.position.col != 7) {
-              visited[player.position.row][player.position.col + 1] = true;
-            }
-          }
-          //Move to that direction
-          else {
-            player.position.col += 1;
-
-            //Make new position visited
-            visited[player.position.row][player.position.col] = true;
-
-            //Check if player intersected with a game object (challenge or prize)
-            playerIntersectsWithSquare();
-
-            checkForWinOrLose(); //End game if won or lost
-          }
-
-          //Update map
-          printMap();
-
-  }); 
+  $("#up").on("click", up);
+  $("#left").on("click", left);
+  $("#down").on("click", down);
+  $("#right").on("click", right);
 
 }
 
@@ -579,7 +598,19 @@ function playerIntersectsWithSquare() {
 
             console.log("player got a challenge");
 
+            //Make arrows unclickable
+            $("#up").off();
+            $("#left").off();
+            $("#down").off();
+            $("#right").off();
+
             gameObjects[i].launch(i);
+
+            //Make arrows clickable
+            $("#up").on("click", up);
+            $("#left").on("click", left);
+            $("#down").on("click", down);
+            $("#right").on("click", right);
 
             //Update map
             printMap();
@@ -625,8 +656,9 @@ function challengeWon(index) {
   $("#" + player.position.row.toString() + player.position.col.toString()).attr("background", "floor.jpg").attr("title", "blank");
 
   //Check if player defeated Voldemort
-  if (enemy.health <= 0 && enemy.numberOfHorcruxes == 0) {
+  if (enemy.health <= 0 && enemy.numberOfHorcruxes == 0 && !beatVoldemort) {
     displayMessageOwnPage("Congratulations! You defeated Voldemort!", "You received a prize: Elder Wand!");
+    beatVoldemort = true;
     player.prizes.push(enemy.prize);
   }
 
@@ -647,6 +679,9 @@ function printMap() {
   //Update number of prizes and horcruzes in DOM
   $("#prizes").html(listOfPrizes);
   $("#horcruxes").html(enemy.numberOfHorcruxes);
+
+  console.log("You: " + player.health);
+  console.log("Voldemort: " + enemy.health);
 
   //Update health bars
   $("#player").html("You: " + player.health);
@@ -844,6 +879,7 @@ function checkForWinOrLose() {
 
     //Game has ended 
     $("#game").stop(true).fadeOut(1000);
+    $("#try-again").stop(true).fadeOut(1000);
 
     if (playerWon) {
       console.log("You won!");
